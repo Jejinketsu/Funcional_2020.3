@@ -1,4 +1,4 @@
-module Random where
+module Replacer where
 
 slice(i, j, text) = drop i (take j text)
 
@@ -16,17 +16,14 @@ switchNums(i, j, offset, text) = slice(0, offset, text) ++ slice(i, j, text) ++ 
 
 replacer(n, t, offset)
     | t == 0 = n
-    | otherwise = replacer(switchNums(i, i+1, offset, n), t-1, offset + 1)
+    | otherwise = replacer(switchNums(i-1, i, offset, n), t-1, offset + 1)
         where
             i = maxDig(n, 0, 1, 0)
-
-
-    
 {-
 main = do
     putStr "Digite N: "
     n <- getLine
     putStr "Digite T: "
     t <- getLine
-    print(show(replacer(n, t, 0)))
+    print(replacer(n, t, 0))
 -}
