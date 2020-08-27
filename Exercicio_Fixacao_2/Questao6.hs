@@ -3,11 +3,13 @@ module Somatorio where
 calc(x, y) = (x^2) + (y^2)
 
 somatorioY(n, x, y)
-    | y == n = 0
+    | n < 1 = 0
+    | y == n = calc(x, y)
     | otherwise = calc(x, y) + somatorioY(n, x, y+1)
 
 somatorioX(m, n, x)
-    | x == n = 0
+    | m < 2 = 0
+    | x == m = somatorioY(n, x, 1)
     | otherwise = somatorioY(n, x, 1) + somatorioX(m, n, x+1)
 
 main = do

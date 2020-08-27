@@ -1,16 +1,14 @@
 module MMC where
 
-mmcP(x, y, z, divisor)
-    | divisor <= 1 = mmc(x, y, z, divisor+1)
-    | divisor > x || divisor > y || divisor > z = error "Divisor maior que algum numero\n"
-    | mod x divisor == 0 && mod y divisor == 0 && mod z divisor == 0 = 1
-    | otherwise = 1 + mmc(x, y, z, divisor+1)
+mmcP(x, y, z, multiplo)
+    | multiplo <= 1 = mmc(x, y, z, multiplo+1)
+    | mod multiplo x == 0 && mod multiplo y == 0 && mod multiplo z == 0 = 1
+    | otherwise = 1 + mmc(x, y, z, multiplo+1)
 
-mmc(x, y, z, divisor)
-    | divisor <= 1 = mmc(x, y, z, divisor+1)
-    | divisor > x || divisor > y || divisor > z = error "Divisor maior que algum numero\n"
-    | mod x divisor == 0 && mod y divisor == 0 && mod z divisor == 0 = divisor
-    | otherwise = mmc(x, y, z, divisor+1)
+mmc(x, y, z, multiplo)
+    | multiplo <= 1 = mmc(x, y, z, multiplo+1)
+    | mod multiplo x == 0 && mod multiplo y == 0 && mod multiplo z == 0 = multiplo
+    | otherwise = mmc(x, y, z, multiplo+1)
 
 main = do
         putStr "Digite X: "
