@@ -1,29 +1,17 @@
-module Replacer where
+module Cadeiras where
 
-slice(i, j, text) = drop i (take j text)
+import System.Random (randomRIO)
 
-getInt :: [Char] -> Int
-getInt(x) = read x :: Int
+mod3(x) = mod x 3
 
--- pega o maior número
-maxDig(numText, i, j, digit)
-    | j > length numText = i
-    | digit < getInt(slice(i, j, numText)) = maxDig(numText, i+1, j+1, getInt(slice(i, j, numText)))
-    | otherwise = maxDig(numText, i+1, j+1, digit)
+montaSaida(x,y,z) = "Ana: " ++ show(mod3(x)) ++ "  Beatriz: " ++ show(mod3(y)) ++ "  Carolina: " ++ show(mod3(z))
 
--- 123456789 => 923456781 => 9,234567,8,1"" => 9,8,34567,12
-switchNums(i, j, offset, text) = slice(0, offset, text) ++ slice(i, j, text) ++ slice(offset, i, text) ++ slice(j, length text, text)
-
-replacer(n, t, offset)
-    | t == 0 = n
-    | otherwise = replacer(switchNums(i-1, i, offset, n), t-1, offset + 1)
-        where
-            i = maxDig(n, 0, 1, 0)
-{-
-main = do
-    putStr "Digite N: "
-    n <- getLine
-    putStr "Digite T: "
-    t <- getLine
-    print(replacer(n, t, 0))
--}
+imprimeResultado(x, y)
+    | mod3(x) == mod3(y) = montaSaida(x, x+1, x+2)
+    | mod3(x+1) /= mod3(y) = montaSaida(x, y, x+1)
+    | otherwise = montaSaida(x, y, x+2)
+        
+main = do 
+        x <- randomRIO(1,100 :: Int)
+        y <- randomRIO(1,100 :: Int)
+        print(imprimeResultado(x,y))

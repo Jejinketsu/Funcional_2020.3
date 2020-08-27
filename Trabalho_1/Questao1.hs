@@ -14,8 +14,8 @@ produtorio_CP(m, n)
 
 produtorio_SP(m, n, x)
     |m < 5 = 0
-    |n == m = calc(n, x)
     |n == m + 1 = x
+    |n == m = calc(n, x)
     |otherwise = produtorio_SP(m, n+1, calc(n, x))
 
 
@@ -30,7 +30,8 @@ lerEntrada = do
 
 verificaFuncao(m, op)
     |op == 1 = produtorio_CP(m, 5)
-    |otherwise = produtorio_SP(m, 5, 1)
+    |op == 2 = produtorio_SP(m, 5, 1)
+    |otherwise = error "A opcao informada eh invalida"
 
 
 main :: IO()

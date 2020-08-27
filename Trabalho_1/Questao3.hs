@@ -12,7 +12,6 @@ minNumber(x, y)
     |x <= y = x
     |otherwise = y
     
-    
 main :: IO()
 main = do
         putStr "Digite o primeiro valor >> "
@@ -21,5 +20,5 @@ main = do
         y <- getLine
         putStr "Digite o segundo valor >> "
         z <- getLine
-        print(minNumber(mdc(read x, read y, maxNumber(read x, read y)), mdc(read x, read z, maxNumber(read x, read z))))
+        print(minNumber(mdc(read x, read y, maxNumber(read x, read y)), minNumber(mdc(read y, read z, maxNumber(read y, read z)), mdc(read x, read z, maxNumber(read x, read z)))))
       
