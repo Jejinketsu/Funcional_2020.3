@@ -8,10 +8,13 @@ maxNumber(x, y)
     |x >= y = x
     |otherwise = y
 
-minNumber(x, y)
-    |x <= y = x
-    |otherwise = y
-    
+resultadoMDC(x, y, z)
+    | n1 >= n2 = mdc(n1, n2, n1)
+    | otherwise = mdc(n1, n2, n2)
+        where 
+            n1 = mdc(x, y, maxNumber(x, y)) 
+            n2 = mdc(x, z, maxNumber(x, z)) 
+
 main :: IO()
 main = do
         putStr "Digite o primeiro valor >> "
@@ -20,5 +23,6 @@ main = do
         y <- getLine
         putStr "Digite o segundo valor >> "
         z <- getLine
-        print(minNumber(mdc(read x, read y, maxNumber(read x, read y)), minNumber(mdc(read y, read z, maxNumber(read y, read z)), mdc(read x, read z, maxNumber(read x, read z)))))
-      
+        --putStr "O mdc entre " ++ show(x) ++ show(y) ++ show(z) ++ "eh: "
+        print(resultadoMDC(read x, read y, read z))
+        
