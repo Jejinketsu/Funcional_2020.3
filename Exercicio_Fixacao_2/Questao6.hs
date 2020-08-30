@@ -1,6 +1,6 @@
 module Somatorio where
 
-calc(x, y) = (x^2) + (y^2)
+calc(x, y) = (x^2) + (y^3)
 
 somatorioY(n, x, y)
     | n < 1 = 0

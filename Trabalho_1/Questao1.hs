@@ -8,13 +8,11 @@ calc(n, x) = x * ((fatorial(n) * 5) / (fatorial(n-5)*2))
 
 produtorio_CP(m, n)
     |m < 5 = 0
-    |n == m + 1 = 1
     |n == m = calc(n, 1)
-    |otherwise = ((fatorial(n) * 5) / (fatorial(n-5)*2)) * produtorio_CP(m, n+1)
+    |otherwise = calc(n, 1) * produtorio_CP(m, n+1)
 
 produtorio_SP(m, n, x)
     |m < 5 = 0
-    |n == m + 1 = x
     |n == m = calc(n, x)
     |otherwise = produtorio_SP(m, n+1, calc(n, x))
 
