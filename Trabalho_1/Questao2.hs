@@ -1,4 +1,4 @@
-module MMC where
+module Fatoracao where
 
 eh_primo(x, divisor)
     | x == 1 = True
