@@ -3,7 +3,9 @@ module Tuplas where
 import System.IO (hSetBuffering, stdout, BufferMode(NoBuffering))
 import Data.Char
 
-listaTeste = [("111","Juh",'F',18),("222","Medyna",'f',60),("333","GD",'M',18),("444","Glaubinho",'m',45)]
+listaTeste = [("111","Juh",'F',18),("222","Medyna",'f',60),("333","GD",'M',18),("444","Glaubinho",'m',45)]  
+-- [("111","Juh",'F',18),("222","Medyna",'f',60),("333","GD",'M',18),("444","Glaubinho",'m',45)]
+-- [(07873102232, "Lucas", 'M', 10), (18873102202, "Mateus", 'M', 10), (29187723445, "Marcos", 'M', 30), (47800976523, "Emili", 'F', 50), (89076543212, "janaina", 'F', 60)]
 
 contaMulheres([]) = 0
 contaMulheres((cpf, nome, sexo, idade):r)

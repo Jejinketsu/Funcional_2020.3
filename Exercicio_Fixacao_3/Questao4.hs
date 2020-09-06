@@ -18,6 +18,8 @@ primeiraMaiuscula(c:r)
 soMaiuscula(strings) = [s | s <- strings, isUpper(s!!0)]
 
 listTeste = ["qual","A","maior","Palavra","desse","Role","paralelepipedo"]
+-- ["picos", "barra", "teresina", "novo oriente", "inhuma", "Valenca"]
+-- ["qual","A","maior","Palavra","desse","Role","paralelepipedo"]
 
 main = do
     putStr "Maior String: "

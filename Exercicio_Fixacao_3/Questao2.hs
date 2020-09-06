@@ -10,5 +10,6 @@ strForInt(c:r, casa)
 
 main = do
     hSetBuffering stdout NoBuffering
+    putStr "Digite um numero: "
     digitos <- getLine
     print(strForInt(digitos,(length digitos)-1))
