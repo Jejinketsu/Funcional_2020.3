@@ -146,3 +146,17 @@ aplicacao lista = do
 
 main :: IO ()
 main = aplicacao []
+
+{-
+
+exemplo de entradas: 
+
+nome: "Julina"
+sexo: 'F'
+cpf: "22222222222"
+data de nascimento: (22,2,2222)
+
+Atenção às aspas simples e duplas dependendo
+do tipo do dado.
+
+-}
