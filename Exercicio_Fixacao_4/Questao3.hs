@@ -15,11 +15,13 @@ produtorioCPF cpf mults = sum [digitToInt(x) * y | (x,y) <- zip cpf mults, isDig
 dig1valido :: CPF -> Bool
 dig1valido cpf
     | mod ((produtorioCPF cpf (reverse [2..10])) * 10) 11 == digitToInt(cpf!!((length cpf) - 2)) = True
+    | mod ((produtorioCPF cpf (reverse [2..10])) * 10) 11 == 10 && digitToInt(cpf!!((length cpf) - 2)) == 0 = True
     | otherwise = False
 
 dig2valido :: CPF -> Bool
 dig2valido cpf
     | mod ((produtorioCPF cpf (reverse [2..11])) * 10) 11 == digitToInt(cpf!!((length cpf) - 1)) = True
+    | mod ((produtorioCPF cpf (reverse [2..10])) * 10) 11 == 10 && digitToInt(cpf!!((length cpf) - 2)) == 0 = True
     | otherwise = False
 
 checaCPF :: CPF -> Bool
