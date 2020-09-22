@@ -20,6 +20,31 @@ lerCurso = do
         qtd_periodos <- getLine
         return (codigo, nome_curso, read qtd_periodos :: Int)
 
+--Funções auxiliares para as Notas
+verificaMatricula :: [Aluno] -> IO String
+verificaMatricula listaAluno = do
+                imprimeTuplas(listaAluno, ["Matricula: ","Nome: ","Curso: ", "Periodo: "])
+                putStr "\nDigite a Matricula do Aluno >> "
+                matricula <- getLine
+                if length ([mat | (mat, nome, curso, periodo) <- listaAluno, mat == matricula]) > 0 
+                        then return matricula
+                else do
+                        print("Esse aluno nao existe. Tente outro.")
+                        verificaMatricula listaAluno
+
+verificaDisciplina :: [Disciplina] -> IO String
+verificaDisciplina listaDisciplina = do
+                imprimeTuplas(listaDisciplina, ["Codigo: ","Nome: ","Curso: ", "Periodo: "])
+                putStr "\nDigite o codigo da Disciplina >> "
+                cod_disciplina <- getLine
+                if length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0 
+                        then return cod_disciplina
+                else do
+                        print("Disciplina ja existe. Tente outra.")
+                        validaDisciplina listaDisciplina        
+--End funções
+
+
 validaCurso :: [Curso] -> IO String
 validaCurso listaCurso = do
                 imprimeCurso(listaCurso)
@@ -40,17 +65,24 @@ validaPeriodo listaCurso cod_curso = do
                 print("Periodo invalido. Tente outro.")
                 validaPeriodo listaCurso cod_curso
 
-lerNotas :: IO Nota
-lerNotas = do
+lerNotas :: [Aluno] -> [Disciplina] -> IO Nota
+lerNotas listaAlunos listaDisciplina = do
         putStr "Digite a matricula do aluno >> "
-        matricula_aluno <- getLine
+        matricula_aluno <- verificaMatricula listaAlunos
         putStr "Digite o codigo da disciplina >> "
-        codigo_disciplina <- getLine
+        codigo_disciplina <- verificaDisciplina listaDisciplina
         putStr "Digite a nota 1 >> "
         nota_1 <- getLine
-        putStr "Digite a nota 2 >> "
-        nota_2 <- getLine
-        return (matricula_aluno, codigo_disciplina, read nota_1 :: Float, read nota_2 :: Float)
+        putStr "Deseja cadastrar a SEGUNDA nota 1-sim | 2-nao >> "
+        op <- getLine
+        if read op == 1
+                then do
+                        putStr "Digite a nota 2 >> "
+                        nota_2 <- getLine
+                        putStr "Notas cadastradas com sucesso \n"
+                        return (matricula_aluno, codigo_disciplina, read nota_1 :: Float, read nota_2 :: Float)
+        else 
+                return (matricula_aluno, codigo_disciplina, read nota_1 :: Float, -1.0)
 
 lerAluno :: [Curso] -> [Aluno] -> IO Aluno
 lerAluno listaCurso listaAlunos = do
@@ -155,8 +187,8 @@ menuPrincipal = do
         print "| 4 - Cadastrar Nota                  |"
         print "| 5 - Ver Cursos                      |"
         print "| 6 - Ver Alunos de um Curso          |"
-        print "| 7 - Disciplinas de um Curso         |"
-        print "| 8 - Notas de um Aluno               |"
+        print "| 7 - Ver Disciplinas de um Curso     |"
+        print "| 8 - Ver Notas de um Aluno           |"
         print "| 9 - Finalizar                       |"
         print("[*-----------------------------------*]")
         putStr "\nDigite uma opcao >> "
@@ -253,8 +285,13 @@ aplicacao listaCurso listaAluno listaDisciplina listaNota = do
                                     novaDisciplina <- lerDisciplina listaDisciplina listaCurso
                                     aplicacao listaCurso listaAluno (insereElemento([novaDisciplina], listaDisciplina)) listaNota
                         Just 4 -> do
-                                    lerNotas <- lerNotas
-                                    aplicacao listaCurso listaAluno listaDisciplina listaNota
+                                    if (length listaAluno) == 0 || (length listaDisciplina) == 0
+                                            then do
+                                                putStr "Nao eh possivel cadastrar Nota, pois nao ha nenhum Aluno ou Disciplina cadastrada!"
+                                                aplicacao listaCurso listaAluno listaDisciplina listaNota
+                                    else do                                      
+                                        notas <- lerNotas listaAluno listaDisciplina
+                                        aplicacao listaCurso listaAluno listaDisciplina (insereElemento([notas], listaNota))
                         Just 5 -> do
                                     imprimeCurso(listaCurso)
                                     aplicacao listaCurso listaAluno listaDisciplina listaNota
@@ -265,7 +302,8 @@ aplicacao listaCurso listaAluno listaDisciplina listaNota = do
                                     aplicacaoVerDisciplina listaCurso listaDisciplina
                                     aplicacao listaCurso listaAluno listaDisciplina listaNota
                         Just 8 -> do
-                                    imprimeTuplas(listaNota, ["Matricula: ","Codigo da Disciplina:", "Nota 1: ", "Nota 2: "])
+                                    aluno <- verificaMatricula listaAluno
+                                    imprimeTuplas([(mat, codigo_disciplina, nota1, nota2) | (mat, codigo_disciplina, nota1, nota2) <- listaNota, aluno==mat], ["Matricula: ","Codigo da Disciplina:", "Nota 1: ", "Nota 2: "])
                                     aplicacao listaCurso listaAluno listaDisciplina listaNota
                         Just 9 -> print("Fim do programa.")
 
