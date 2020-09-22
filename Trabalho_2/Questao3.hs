@@ -1,4 +1,5 @@
 module QuickSort where
+import Data.Char
 
 type Time = (String, String, String, Int)
 
@@ -36,8 +37,11 @@ imprime((nome, estado, pais, ano_fundacao):r) = do
 buscaTime :: (String, [Time]) -> IO()
 buscaTime(nomeTime, []) = putStr "Time nao Encontrado"
 buscaTime(nomeTime, (nome, estado, pais, ano_fundacao):r)
-    | nomeTime == nome = imprime([(nome, estado, pais, ano_fundacao)])
+    |transformaMinusculo(nomeTime) == transformaMinusculo(nome) = imprime([(nome, estado, pais, ano_fundacao)])
     | otherwise = buscaTime(nomeTime, r)
+
+transformaMinusculo :: (String) -> String
+transformaMinusculo (lista) = map(\x -> toLower x) lista
 
 checaEntrada :: Int -> Maybe Int
 checaEntrada option
