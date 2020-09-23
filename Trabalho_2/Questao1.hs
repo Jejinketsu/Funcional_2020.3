@@ -47,7 +47,7 @@ checaEntrada option min max
 
 menu :: IO Int
 menu = do
-    putStr "\n"
+        putStr "\n"
         print("[*------------------------------------------------*]")
         print "| 1 - Numeros caracteres sem repetir               |"
         print "| 2 - Tipos de caracteres iniciais das listas      |"
@@ -57,20 +57,25 @@ menu = do
         op <- getLine
         return (read op :: Int)
     
+main :: IO()
 main = do
         putStr "Entre com uma lista de Strings no seguinte formato: [string1, string2, string3]: "
         lista <- read <$> getLine :: IO [String]
-        opcao <- menu
-        case checaEntrada opcao 1 4 of
-            Nothing -> do 
-                    print("Opcao invalida, tente novamente")
-                    main
-            Just 1 -> do
-                    print([contaLetra(str) | str <- lista])
-                    main
-            Just 2 -> do
-                    print(tipoInicio lista)
-                    main
-            Just 3 -> do
-                    print(maisVogais lista)
-                    main
+        aplicacao lista
+
+aplicacao :: [String] -> IO()
+aplicacao lista = do
+                    opcao <- menu
+                    case checaEntrada opcao 1 4 of
+                        Nothing -> do 
+                                print("Opcao invalida, tente novamente")
+                                aplicacao lista
+                        Just 1 -> do
+                                print([contaLetra(str) | str <- lista])
+                                aplicacao lista
+                        Just 2 -> do
+                                print(tipoInicio lista)
+                                aplicacao lista
+                        Just 3 -> do
+                                print(maisVogais lista)
+                                aplicacao lista
