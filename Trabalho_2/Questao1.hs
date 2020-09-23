@@ -4,23 +4,8 @@ import Data.Char (toLower, toUpper, isDigit, isLetter)
 import Data.Map (fromListWith, toList)
 import Data.List (maximumBy)
 import Data.Ord (comparing)
-import Data.Char
 
 
-buscaCaractere :: (Int, Char, String) -> Int
-buscaCaractere(cont, x, []) = cont
-buscaCaractere(cont, x, c:r)
-    |toLower(x) == toLower(c) = buscaCaractere(cont+1, x, r)
-    |otherwise = buscaCaractere(cont, x, r)
-
-nCaracteres :: (Int, String, String) -> Int
-nCaracteres(i,[], copiaString) = i
-nCaracteres(i, c:r,copiaString)
-    |buscaCaractere(0, c, copiaString) == 1 = nCaracteres(i+1, r, copiaString)
-    |otherwise = nCaracteres(i, r, copiaString)
-
-caSemRepetir :: ([String]) -> [Int]
-caSemRepetir(lista) = map(\x -> nCaracteres(0, x, x)) lista
 -- a --
 contaLetra :: String -> Int
 contaLetra str = length (toList (fromListWith (+) [(x,1) | x <- str]))

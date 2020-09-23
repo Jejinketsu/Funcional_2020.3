@@ -39,24 +39,29 @@ menu = do
         op <- getLine
         return (read op :: Int)
 
-
+main :: IO()
 main = do
         putStr "Entre com a Lista 1, no formato [1,2,3,4 ...]: "
         lista1 <- read <$> getLine :: IO [Int]
         putStr "Entre com a Lista 2, no formato [1,2,3,4 ...]: "
         lista2 <- read <$> getLine :: IO [Int]
-        opcao <- menu
-        case checaEntrada opcao 1 2 of
-            Nothing -> do 
-                    print("Opcao invalida, tente novamente")
-                    main
-            Just 1 -> do
-                    print(uniaoOrdenada lista1 lista2)
-                    main
-            Just 2 -> do
-                    print(listaDeSomas lista1 lista2)
-                    main
+        aplicacao lista1 lista2
 
+aplicacao :: [Int] -> [Int] -> IO()
+aplicacao lista1 lista2 = do
+                        opcao <- menu
+                        case checaEntrada opcao 1 2 of
+                                Nothing -> do 
+                                        print("Opcao invalida, tente novamente")
+                                        aplicacao lista1 lista2
+                                Just 1 -> do
+                                        putStr "Uniao ordenada das Listas >> "
+                                        print(uniaoOrdenada lista1 lista2)
+                                        aplicacao lista1 lista2
+                                Just 2 -> do
+                                        putStr "Lista de Somas >> "
+                                        print(listaDeSomas lista1 lista2)
+                                        aplicacao lista1 lista2
 -- A = 
 -- (A-B) = [1,8]
 -- (B-A) = [7,9]
