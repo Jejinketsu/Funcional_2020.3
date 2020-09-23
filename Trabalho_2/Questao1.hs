@@ -12,8 +12,10 @@ contaLetra str = length (toList (fromListWith (+) [(x,1) | x <- str]))
 -- b --
 ehVogal :: Char -> Bool
 ehVogal c
-    | toLower(c) == 'a' || toLower(c) == 'e' || toLower(c) == 'i' || toLower(c) == 'o' || toLower(c) == 'u' = True
+    | caractere == 'a' || caractere == 'e' || caractere == 'i' || caractere == 'o' || caractere == 'u' = True
     | otherwise = False
+        where 
+            caractere = toLower(c)
 
 tipoChar :: Char -> String
 tipoChar c
@@ -36,3 +38,17 @@ contaVogal (c:r)
 
 maisVogais :: [[Char]] -> ([Char], Int)
 maisVogais listaStrings = maximumBy (comparing snd) (toList (fromListWith (+) [(str,contaVogal(str)) | str <- listaStrings]))
+
+menu :: IO Int
+menu = do
+        putStr "\n"
+        print("[*------------------------------------------------*]")
+        print "| 1 - Numeros caracteres sem repetir               |"
+        print "| 2 - Tipos de caracteres iniciais das listas      |"
+        print "| 3 - Strings com maior numero de vogais           |"
+        print("[*------------------------------------------------*]")
+        putStr "\nDigite uma opcao >> "
+        op <- getLine
+        return (read op :: Int)
+
+
