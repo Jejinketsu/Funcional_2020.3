@@ -68,8 +68,6 @@ cadastro_pessoa = do
                                  hClose arq
                     Just pessoa -> putStrLn ("A pessoa ja esta cadastrada: " ++ (foldl1 (\m n -> m ++ " " ++ n) pessoa))	
 
-
-
 imprimeLista [[]] = putStr "\n"
 imprimeLista ((a:b:[]):r)= do
                               putStrLn (a++ "  "++b)

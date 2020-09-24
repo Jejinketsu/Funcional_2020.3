@@ -8,7 +8,7 @@ import Data.Ord (comparing)
 
 -- a --
 contaLetra :: String -> Int
-contaLetra str = length (toList (fromListWith (+) [(x,1) | x <- str]))
+contaLetra str = length (toList (fromListWith (+) [(toLowe(x),1) | x <- str]))
 
 -- b --
 ehVogal :: Char -> Bool

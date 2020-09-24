@@ -20,28 +20,33 @@ lerCurso = do
         qtd_periodos <- getLine
         return (codigo, nome_curso, read qtd_periodos :: Int)
 
+verificaCondicao :: Bool -> Maybe Bool
+verificaCondicao(operacao)
+        | operacao = Just True
+        | otherwise = Just False
+
 --Funções auxiliares para as Notas
 verificaMatricula :: [Aluno] -> IO String
 verificaMatricula listaAluno = do
                 imprimeTuplas(listaAluno, ["Matricula: ","Nome: ","Curso: ", "Periodo: "])
                 putStr "\nDigite a Matricula do Aluno >> "
                 matricula <- getLine
-                if length ([mat | (mat, nome, curso, periodo) <- listaAluno, mat == matricula]) > 0 
-                        then return matricula
-                else do
-                        print("Esse aluno nao existe. Tente outro.")
-                        verificaMatricula listaAluno
+                case verificaCondicao (length ([mat | (mat, nome, curso, periodo) <- listaAluno, mat == matricula]) > 0) of
+                        Just True -> return matricula
+                        Just False -> do
+                                print("Esse aluno nao existe. Tente outro.")
+                                verificaMatricula listaAluno
 
 verificaDisciplina :: [Disciplina] -> IO String
 verificaDisciplina listaDisciplina = do
                 imprimeTuplas(listaDisciplina, ["Codigo: ","Nome: ","Curso: ", "Periodo: "])
                 putStr "\nDigite o codigo da Disciplina >> "
                 cod_disciplina <- getLine
-                if length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0 
-                        then return cod_disciplina
-                else do
-                        print("Disciplina ja existe. Tente outra.")
-                        validaDisciplina listaDisciplina        
+                case verificaCondicao (length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0) of
+                        Just True -> return cod_disciplina
+                        Just False -> do
+                                print("Disciplina ja existe. Tente outra.")
+                                validaDisciplina listaDisciplina        
 --End funções
 
 
@@ -50,20 +55,20 @@ validaCurso listaCurso = do
                 imprimeCurso(listaCurso)
                 putStr "Digite o codigo do Curso >> "
                 codigo_curso <- getLine
-                if length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == codigo_curso]) > 0 
-                        then return codigo_curso
-                else do
-                        print("Esse curso nao existe. Tente outro.")
-                        validaCurso listaCurso
+                case verificaCondicao (length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == codigo_curso]) > 0) of
+                        Just True -> return codigo_curso
+                        Just False -> do
+                                print("Esse curso nao existe. Tente outro.")
+                                validaCurso listaCurso
 
 validaPeriodo :: [Curso] -> String -> IO Int
 validaPeriodo listaCurso cod_curso = do
         periodo <- getLine
-        if length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == cod_curso, (read periodo :: Int) <= qtd_periodo, (read periodo :: Int) > 0]) > 0
-                then return (read periodo :: Int)
-        else do
-                print("Periodo invalido. Tente outro.")
-                validaPeriodo listaCurso cod_curso
+        case verificaCondicao (length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == cod_curso, (read periodo :: Int) <= qtd_periodo, (read periodo :: Int) > 0]) > 0) of
+                Just True -> return (read periodo :: Int)
+                Just False -> do
+                                print("Periodo invalido. Tente outro.")
+                                validaPeriodo listaCurso cod_curso
 
 lerNotas :: [Aluno] -> [Disciplina] -> IO Nota
 lerNotas listaAlunos listaDisciplina = do
@@ -75,14 +80,13 @@ lerNotas listaAlunos listaDisciplina = do
         nota_1 <- getLine
         putStr "Deseja cadastrar a SEGUNDA nota 1-sim | 2-nao >> "
         op <- getLine
-        if read op == 1
-                then do
+        case verificaCondicao (read op == 1) of
+                Just True -> do
                         putStr "Digite a nota 2 >> "
                         nota_2 <- getLine
                         putStr "Notas cadastradas com sucesso \n"
                         return (matricula_aluno, codigo_disciplina, read nota_1 :: Float, read nota_2 :: Float)
-        else 
-                return (matricula_aluno, codigo_disciplina, read nota_1 :: Float, -1.0)
+                Just False -> return (matricula_aluno, codigo_disciplina, read nota_1 :: Float, -1.0)
 
 lerAluno :: [Curso] -> [Aluno] -> IO Aluno
 lerAluno listaCurso listaAlunos = do
@@ -99,11 +103,12 @@ lerAluno listaCurso listaAlunos = do
 validaMatricula :: [Aluno] -> IO String
 validaMatricula listaAlunos = do
                 matricula <- getLine
-                if length ([mat | (mat, nome, curso, periodo) <- listaAlunos, mat == matricula]) > 0 
-                        then do
-                                print("Matricula ja existe. Tente outra.")
-                                validaMatricula listaAlunos
-                else return matricula
+                case verificaCondicao (length ([mat | (mat, nome, curso, periodo) <- listaAlunos, mat == matricula]) > 0) of
+                        Just True -> do
+                                        print("Matricula ja existe. Tente outra.")
+                                        putStr "Digite a matricula >> "
+                                        validaMatricula listaAlunos
+                        Just False -> return matricula
  
 lerDisciplina :: [Disciplina] -> [Curso] -> IO Disciplina
 lerDisciplina listaDisciplina listaCurso = do
@@ -120,11 +125,11 @@ lerDisciplina listaDisciplina listaCurso = do
 validaDisciplina :: [Aluno] -> IO String
 validaDisciplina listaDisciplina = do
                 cod_disciplina <- getLine
-                if length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0 
-                        then do
+                case verificaCondicao (length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0) of
+                        Just True -> do
                                 print("Disciplina ja existe. Tente outra.")
                                 validaDisciplina listaDisciplina
-                else return cod_disciplina
+                        Just False -> return cod_disciplina
 
 checaEntrada :: Int -> Int -> Int -> Maybe Int
 checaEntrada option min max
@@ -134,11 +139,11 @@ checaEntrada option min max
 imprimeCurso :: [Curso] -> IO ()
 imprimeCurso([]) = putStr "\n"
 imprimeCurso((codigo, nome_curso, qtd_periodos):r) = do
-                                putStr "Codigo: " >> putStr(codigo)
-                                putStr "   |   Nome: " >> putStr(nome_curso)
-                                putStr "   |   Qtd. Periodos: " >> putStr(show qtd_periodos)
-                                putStr "\n"
-                                imprimeCurso(r)
+                                                        putStr "Codigo: " >> putStr(codigo)
+                                                        putStr "   |   Nome: " >> putStr(nome_curso)
+                                                        putStr "   |   Qtd. Periodos: " >> putStr(show qtd_periodos)
+                                                        putStr "\n"
+                                                        imprimeCurso(r)
 
 imprime :: (Show a1, Show a2, Show a3, Show a4) => ((a1, a2, a3, a4), [String], Int) -> IO ()
 imprime((a,b,c,d), labels, cont)
@@ -269,29 +274,29 @@ aplicacao listaCurso listaAluno listaDisciplina listaNota = do
                                     novoCurso <- lerCurso
                                     aplicacao (insereElemento([novoCurso], listaCurso)) listaAluno listaDisciplina listaNota
                         Just 2 -> do 
-                                    if (length listaCurso) == 0
-                                            then do
+                                    case verificaCondicao ((length listaCurso) == 0) of
+                                        Just True -> do
                                                 putStr "Nao eh possivel cadastrar aluno, pois nao ha nenhum curso cadastrado. Por favor, cadastre um Curso!"
                                                 aplicacao listaCurso listaAluno listaDisciplina listaNota
-                                    else do 
-                                        novoAluno <- lerAluno listaCurso listaAluno
-                                        aplicacao listaCurso (insereElemento([novoAluno], listaAluno)) listaDisciplina listaNota
+                                        Just False -> do 
+                                                novoAluno <- lerAluno listaCurso listaAluno
+                                                aplicacao listaCurso (insereElemento([novoAluno], listaAluno)) listaDisciplina listaNota
                         Just 3 -> do
-                                if (length listaCurso) == 0
-                                        then do
-                                            putStr "Nao eh possivel cadastrar disciplina, pois nao ha nenhum curso cadastrado. Por favor, cadastre um Curso!"
-                                            aplicacao listaCurso listaAluno listaDisciplina listaNota
-                                else do
-                                    novaDisciplina <- lerDisciplina listaDisciplina listaCurso
-                                    aplicacao listaCurso listaAluno (insereElemento([novaDisciplina], listaDisciplina)) listaNota
+                                case verificaCondicao ((length listaCurso) == 0) of
+                                        Just True -> do
+                                                putStr "Nao eh possivel cadastrar disciplina, pois nao ha nenhum curso cadastrado. Por favor, cadastre um Curso!"
+                                                aplicacao listaCurso listaAluno listaDisciplina listaNota
+                                        Just False -> do
+                                                novaDisciplina <- lerDisciplina listaDisciplina listaCurso
+                                                aplicacao listaCurso listaAluno (insereElemento([novaDisciplina], listaDisciplina)) listaNota
                         Just 4 -> do
-                                    if (length listaAluno) == 0 || (length listaDisciplina) == 0
-                                            then do
+                                case verificaCondicao ((length listaAluno) == 0 || (length listaDisciplina) == 0) of
+                                        Just True -> do
                                                 putStr "Nao eh possivel cadastrar Nota, pois nao ha nenhum Aluno ou Disciplina cadastrada!"
                                                 aplicacao listaCurso listaAluno listaDisciplina listaNota
-                                    else do                                      
-                                        notas <- lerNotas listaAluno listaDisciplina
-                                        aplicacao listaCurso listaAluno listaDisciplina (insereElemento([notas], listaNota))
+                                        Just False -> do                                      
+                                                notas <- lerNotas listaAluno listaDisciplina
+                                                aplicacao listaCurso listaAluno listaDisciplina (insereElemento([notas], listaNota))
                         Just 5 -> do
                                     imprimeCurso(listaCurso)
                                     aplicacao listaCurso listaAluno listaDisciplina listaNota
