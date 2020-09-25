@@ -21,7 +21,8 @@ uniaoOrdenada grupoA grupoB = ordenaLista((subtrairGrupo grupoA grupoB), (subtra
 
 -- b --
 listaDeSomas :: [Int] -> [Int] -> [Int]
-listaDeSomas grupoA grupoB = [(x^2)+(y^2) | x <- grupoA, y <- grupoB, (x^2)+(y^2) > (((grupoA!!0)^3)+((grupoB!!0)^3))] 
+listaDeSomas grupoA grupoB = [x | x <- (map (\x -> x^2) (concat[grupoA, grupoB])), x > (((grupoA!!0)^3)+((grupoB!!0)^3))]
+
 
 checaEntrada :: Int -> Int -> Int -> Maybe Int
 checaEntrada option min max
@@ -62,6 +63,3 @@ aplicacao lista1 lista2 = do
                                         putStr "Lista de Somas >> "
                                         print(listaDeSomas lista1 lista2)
                                         aplicacao lista1 lista2
--- A = 
--- (A-B) = [1,8]
--- (B-A) = [7,9]
