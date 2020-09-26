@@ -26,7 +26,7 @@ uniaoOrdenada grupoA grupoB = ordenaLista((subtrairGrupo grupoA grupoB), (subtra
 
 -- b --
 listaDeSomas :: [Int] -> [Int] -> [Int]
-listaDeSomas grupoA grupoB = [x | x <- (map (\x -> x^2) (concat[grupoA, grupoB])), x > (((grupoA!!0)^3)+((grupoB!!0)^3))]
+listaDeSomas grupoA grupoB = [x | x <- (map (\x -> x^2) (grupoA ++ grupoB)), x > (((grupoA!!0)^3)+((grupoB!!0)^3))]
 
 
 checaEntrada :: Int -> Int -> Int -> Maybe Int
@@ -72,3 +72,6 @@ aplicacao lista1 lista2 = do
                                         aplicacao lista1 lista2
 
 
+l1 = [1,3,4,5]
+l2 = [2,4,6,7]
+[16,25,36,49]
