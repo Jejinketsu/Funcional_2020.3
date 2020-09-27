@@ -38,7 +38,7 @@ contaVogal (c:r)
     | otherwise = contaVogal r
 
 maisVogais :: [[Char]] -> ([Char], Int) 
-maisVogais listaStrings = maximumBy (comparing snd) (toList (fromListWith (+) [(str,contaVogal(str)) | str <- listaStrings]))
+maisVogais listaStrings = maximumBy (comparing snd) [(str,contaVogal(str)) | str <- listaStrings]
 
 {-
 

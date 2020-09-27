@@ -18,6 +18,9 @@ uniaoOrdenada grupoA grupoB = ordenaLista((subtrairGrupo grupoA grupoB), (subtra
 
 -- b --
 listaDeSomas :: [Int] -> [Int] -> [Int]
+listaDeSomas [] [] = []
+listaDeSomas grupoA [] = [x | x <- (map (\x -> x^2) grupoA), x > ((grupoA!!0)^3)]
+listaDeSomas [] grupoB = [x | x <- (map (\x -> x^2) grupoB), x > ((grupoB!!0)^3)]
 listaDeSomas grupoA grupoB = [x | x <- (map (\x -> x^2) (grupoA ++ grupoB)), x > (((grupoA!!0)^3)+((grupoB!!0)^3))]
 
 

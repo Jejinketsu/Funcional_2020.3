@@ -45,7 +45,7 @@ transformaMinusculo (lista) = map(\x -> toLower x) lista
 
 checaEntrada :: Int -> Maybe Int
 checaEntrada option
-    | option >= 1 && option <= 4 = Just option
+    | option >= 1 && option <= 5 = Just option
     | otherwise = Nothing
 
 menu :: IO Int
