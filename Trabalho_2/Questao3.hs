@@ -7,8 +7,8 @@ quickSort :: [Time] -> [Time]
 quickSort [] = []
 quickSort ((nome, estado, pais, ano_fundacao):r) = quickSort parte_esquerda  ++ [(nome, estado, pais, ano_fundacao)] ++ quickSort parte_direita
     where
-        parte_esquerda = [(n, e, p, a) | (n, e, p, a)  <- r, n < nome]
-        parte_direita = [(n, e, p, a)  |(n, e, p, a)  <- r, n >= nome]
+        parte_esquerda = [(n, e, p, a) | (n, e, p, a)  <- r, transformaMinusculo(n) < transformaMinusculo(nome)]
+        parte_direita = [(n, e, p, a)  |(n, e, p, a)  <- r, transformaMinusculo(n) >= transformaMinusculo(nome)]
         --Onde n = nome; e = estado; p = pais; a = ano de publicação
 
 lerTime :: IO Time

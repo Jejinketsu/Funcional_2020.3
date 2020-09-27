@@ -10,14 +10,6 @@ ordenaLista(c1:r1,c2:r2)
     | c1 < c2 = c1 : ordenaLista(r1,c2:r2)
     | otherwise = c2 : ordenaLista(c1:r1,r2)
 
-{-
-subtrairGrupo :: [Int] -> [Int] -> [Int]
-subtrairGrupo [] grupoB = []
-subtrairGrupo (c:r) grupoB
-    | not(elem c grupoB) = c : subtrairGrupo r grupoB
-    | otherwise = subtrairGrupo r grupoB
--}
-
 subtrairGrupo :: [Int] -> [Int] -> [Int]
 subtrairGrupo lista1 lista2 = [a | a <- lista1, not(elem a lista2)]
 
@@ -71,7 +63,3 @@ aplicacao lista1 lista2 = do
                                         print(listaDeSomas lista1 lista2)
                                         aplicacao lista1 lista2
 
-
-l1 = [1,3,4,5]
-l2 = [2,4,6,7]
-[16,25,36,49]
