@@ -10,6 +10,11 @@ type Nota = (String, String, Float, Float)
 --Dissciplinas(Código da Disciplina, Código do Curso, Nome Disciplina, Período)
 --Notas(Matricula, Código Disciplina, Nota1, Nota2)
 
+verificaCondicao :: Bool -> Maybe Bool
+verificaCondicao(operacao)
+        | operacao = Just True
+        | otherwise = Just False
+
 lerCurso :: IO Curso
 lerCurso = do
         putStr "Digite o codigo do curso >> "
@@ -19,56 +24,6 @@ lerCurso = do
         putStr "Digite quantidade de periodos do curso >> "
         qtd_periodos <- getLine
         return (codigo, nome_curso, read qtd_periodos :: Int)
-
-verificaCondicao :: Bool -> Maybe Bool
-verificaCondicao(operacao)
-        | operacao = Just True
-        | otherwise = Just False
-
---Funções auxiliares para as Notas
-verificaMatricula :: [Aluno] -> IO String
-verificaMatricula listaAluno = do
-                imprimeTuplas(listaAluno, ["Matricula: ","Nome: ","Curso: ", "Periodo: "])
-                putStr "\nDigite a Matricula do Aluno >> "
-                matricula <- getLine
-                case verificaCondicao (length ([mat | (mat, nome, curso, periodo) <- listaAluno, mat == matricula]) > 0) of
-                        Just True -> return matricula
-                        Just False -> do
-                                print("Esse aluno nao existe. Tente outro.")
-                                verificaMatricula listaAluno
-
-verificaDisciplina :: [Disciplina] -> IO String
-verificaDisciplina listaDisciplina = do
-                imprimeTuplas(listaDisciplina, ["Codigo: ","Nome: ","Curso: ", "Periodo: "])
-                putStr "\nDigite o codigo da Disciplina >> "
-                cod_disciplina <- getLine
-                case verificaCondicao (length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0) of
-                        Just True -> return cod_disciplina
-                        Just False -> do
-                                putStr("Disciplina nao existe. Tente outra. \n")
-                                verificaDisciplina listaDisciplina        
---End funções
-
-
-validaCurso :: [Curso] -> IO String
-validaCurso listaCurso = do
-                imprimeCurso(listaCurso)
-                putStr "\nDigite o codigo do Curso >> "
-                codigo_curso <- getLine
-                case verificaCondicao (length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == codigo_curso]) > 0) of
-                        Just True -> return codigo_curso
-                        Just False -> do
-                                print("Esse curso nao existe. Tente outro.")
-                                validaCurso listaCurso
-
-validaPeriodo :: [Curso] -> String -> IO Int
-validaPeriodo listaCurso cod_curso = do
-        periodo <- getLine
-        case verificaCondicao (length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == cod_curso, (read periodo :: Int) <= qtd_periodo, (read periodo :: Int) > 0]) > 0) of
-                Just True -> return (read periodo :: Int)
-                Just False -> do
-                                print("Periodo invalido. Tente outro.")
-                                validaPeriodo listaCurso cod_curso
 
 lerNotas :: [Aluno] -> [Disciplina] -> IO Nota
 lerNotas listaAlunos listaDisciplina = do
@@ -99,16 +54,6 @@ lerAluno listaCurso listaAlunos = do
         putStr "Digite o periodo do aluno >> "
         periodo <- validaPeriodo listaCurso codigo_curso
         return (matricula, nome_aluno, codigo_curso, periodo)
-
-validaMatricula :: [Aluno] -> IO String
-validaMatricula listaAlunos = do
-                matricula <- getLine
-                case verificaCondicao (length ([mat | (mat, nome, curso, periodo) <- listaAlunos, mat == matricula]) > 0) of
-                        Just True -> do
-                                        print("Matricula ja existe. Tente outra.")
-                                        putStr "Digite a matricula >> "
-                                        validaMatricula listaAlunos
-                        Just False -> return matricula
  
 lerDisciplina :: [Disciplina] -> [Curso] -> IO Disciplina
 lerDisciplina listaDisciplina listaCurso = do
@@ -122,6 +67,16 @@ lerDisciplina listaDisciplina listaCurso = do
         periodo <- validaPeriodo listaCurso codigo_curso
         return (codigo_disciplina, codigo_curso, nome_disciplina, periodo)
 
+validaMatricula :: [Aluno] -> IO String
+validaMatricula listaAlunos = do
+                matricula <- getLine
+                case verificaCondicao (length ([mat | (mat, nome, curso, periodo) <- listaAlunos, mat == matricula]) > 0) of
+                        Just True -> do
+                                        print("Matricula ja existe. Tente outra.")
+                                        putStr "Digite a matricula >> "
+                                        validaMatricula listaAlunos
+                        Just False -> return matricula
+
 validaDisciplina :: [Aluno] -> IO String
 validaDisciplina listaDisciplina = do
                 cod_disciplina <- getLine
@@ -131,11 +86,50 @@ validaDisciplina listaDisciplina = do
                                 validaDisciplina listaDisciplina
                         Just False -> return cod_disciplina
 
-checaEntrada :: Int -> Int -> Int -> Maybe Int
-checaEntrada option min max
-    | option >= min && option <= max = Just option
-    | otherwise = Nothing        
-           
+validaCurso :: [Curso] -> IO String
+validaCurso listaCurso = do
+                imprimeCurso(listaCurso)
+                putStr "\nDigite o codigo do Curso >> "
+                codigo_curso <- getLine
+                case verificaCondicao (length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == codigo_curso]) > 0) of
+                        Just True -> return codigo_curso
+                        Just False -> do
+                                print("Esse curso nao existe. Tente outro.")
+                                validaCurso listaCurso
+
+validaPeriodo :: [Curso] -> String -> IO Int
+validaPeriodo listaCurso cod_curso = do
+        periodo <- getLine
+        case verificaCondicao (length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == cod_curso, (read periodo :: Int) <= qtd_periodo, (read periodo :: Int) > 0]) > 0) of
+                Just True -> return (read periodo :: Int)
+                Just False -> do
+                                print("Periodo invalido. Tente outro.")
+                                validaPeriodo listaCurso cod_curso       
+
+--Funções auxiliares para as Notas
+verificaMatricula :: [Aluno] -> IO String
+verificaMatricula listaAluno = do
+                imprimeTuplas(listaAluno, ["Matricula: ","Nome: ","Curso: ", "Periodo: "])
+                putStr "\nDigite a Matricula do Aluno >> "
+                matricula <- getLine
+                case verificaCondicao (length ([mat | (mat, nome, curso, periodo) <- listaAluno, mat == matricula]) > 0) of
+                        Just True -> return matricula
+                        Just False -> do
+                                print("Esse aluno nao existe. Tente outro.")
+                                verificaMatricula listaAluno
+
+verificaDisciplina :: [Disciplina] -> IO String
+verificaDisciplina listaDisciplina = do
+                imprimeTuplas(listaDisciplina, ["Codigo: ","Nome: ","Curso: ", "Periodo: "])
+                putStr "\nDigite o codigo da Disciplina >> "
+                cod_disciplina <- getLine
+                case verificaCondicao (length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0) of
+                        Just True -> return cod_disciplina
+                        Just False -> do
+                                putStr("Disciplina nao existe. Tente outra. \n")
+                                verificaDisciplina listaDisciplina        
+--End funções          
+                        
 imprimeCurso :: [Curso] -> IO ()
 imprimeCurso([]) = putStr "\n"
 imprimeCurso((codigo, nome_curso, qtd_periodos):r) = do
@@ -172,15 +166,14 @@ imprimeTuplas(c:r, labels)
 insereElemento :: Ord a => ([a], [a]) -> [a]
 insereElemento(c1:r1, []) = c1:r1
 insereElemento(c1:r1, c2:r2)
-    | c1 < c2 = concat[c1:r1, c2:r2]
+    | c1 < c2 = c1:r1 ++ c2:r2
     | c1 == c2 = c2:r2
     | otherwise = c2 : insereElemento(c1:r1, r2)
 
-buscaAluno :: (String, [Aluno]) -> Bool
-buscaAluno(matricula, []) = False
-buscaAluno(matricula_busca, (matricula, nome, curso, periodo):r)
-    | matricula_busca == matricula = True
-    | otherwise = buscaAluno(matricula, r)
+checaEntrada :: Int -> Int -> Int -> Maybe Int
+checaEntrada option min max
+        | option >= min && option <= max = Just option
+        | otherwise = Nothing 
 
 menuPrincipal :: IO Int
 menuPrincipal = do
