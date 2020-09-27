@@ -45,15 +45,15 @@ verificaDisciplina listaDisciplina = do
                 case verificaCondicao (length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0) of
                         Just True -> return cod_disciplina
                         Just False -> do
-                                print("Disciplina ja existe. Tente outra.")
-                                validaDisciplina listaDisciplina        
+                                putStr("Disciplina nao existe. Tente outra. \n")
+                                verificaDisciplina listaDisciplina        
 --End funções
 
 
 validaCurso :: [Curso] -> IO String
 validaCurso listaCurso = do
                 imprimeCurso(listaCurso)
-                putStr "Digite o codigo do Curso >> "
+                putStr "\nDigite o codigo do Curso >> "
                 codigo_curso <- getLine
                 case verificaCondicao (length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == codigo_curso]) > 0) of
                         Just True -> return codigo_curso

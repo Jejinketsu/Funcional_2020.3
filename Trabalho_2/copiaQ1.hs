@@ -10,6 +10,9 @@ import Data.Ord (comparing)
 contaLetra :: String -> Int
 contaLetra str = length ( toList (fromListWith (+) [(toLower(x),1) | x <- str]))
 
+letrasDiferenteString :: [String] -> [Int]
+letrasDiferenteString lista =  [contaLetra(str) | str <- lista]
+
 -- b --
 ehVogal :: Char -> Bool
 ehVogal c
@@ -37,16 +40,16 @@ contaVogal (c:r)
     | ehVogal(c) = 1 + contaVogal r
     | otherwise = contaVogal r
 
-maisVogais :: [[Char]] -> ([Char], Int) 
-maisVogais listaStrings = maximumBy (comparing snd) (toList (fromListWith (+) [(str,contaVogal(str)) | str <- listaStrings]))
+maiorNumeroVogal :: ([String]) -> [String]
+maiorNumeroVogal(lista) = filter(\x -> contaVogal(x) > 0 && contaVogal(x) == (maximum(map(\y -> contaVogal(y)) lista)) ) lista
 
-{-
+verificaRetorno :: [String] -> Maybe [String]
+verificaRetorno(lista)
+    |length(lista) > 0 = Just lista
+    |otherwise = Nothing
 
-resultadoMaisVogais :: ([Char], Int) -> Maybe ([Char],Int)
-resultadoMaisVogais(resultado)
-        |(maximumBy (comparing snd) resultado) == 0 = Nothing
-        |otherwise = Just resultado
--}
+
+
 checaEntrada :: Int -> Int -> Int -> Maybe Int
 checaEntrada option min max
     | option >= min && option <= max = Just option
@@ -66,7 +69,8 @@ menu = do
     
 main :: IO()
 main = do
-        putStr "Entre com uma lista de Strings no seguinte formato: [string1, string2, string3]: "
+        putStr "Entre com uma lista de Strings no seguinte formato: [string1, string2, string3] \n"
+        putStr ">> "
         lista <- read <$> getLine :: IO [String]
         aplicacao lista
 
@@ -78,11 +82,17 @@ aplicacao lista = do
                                 print("Opcao invalida, tente novamente")
                                 aplicacao lista
                         Just 1 -> do
-                                print([contaLetra(str) | str <- lista])
+                                print(letrasDiferenteString lista)
                                 aplicacao lista
                         Just 2 -> do
                                 print(tipoInicio lista)
                                 aplicacao lista
                         Just 3 -> do
-                                print(maisVogais lista)
-                                aplicacao lista
+                                case verificaRetorno(maiorNumeroVogal(lista)) of
+                                    Just lista -> do
+                                            putStr "Strings com maior numero de vogais \n"
+                                            print(lista)
+                                            aplicacao lista
+                                    Nothing -> do
+                                                putStr("Nao ha strings com a presenca de vogais")
+                                                aplicacao lista
