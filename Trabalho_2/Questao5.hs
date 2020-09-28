@@ -373,8 +373,6 @@ aplicacao = do
                         Just 4 -> do
                                 alunos <- conteudoConvertido "aluno.txt"
                                 disciplinas <- conteudoConvertido "disciplinas.txt"
-                                print(length alunos)
-                                print(length disciplinas)
                                 case verificaCondicao ((length alunos) == 1 || (length disciplinas) == 1) of
                                         Just True -> do
                                                 putStr "Nao eh possivel cadastrar Nota, pois nao ha nenhum Aluno ou Disciplina cadastrada!"
