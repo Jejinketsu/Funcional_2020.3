@@ -5,6 +5,17 @@ import System.IO
 import System.IO.Error
 import Prelude hiding (catch)
 
+labelCurso :: [String]
+labelCurso = ["Codigo", "Nome", "Qtd. Periodo"]
+
+labelAluno :: [String]
+labelAluno = ["Matricula","Nome","Curso","Periodo"]
+
+labelDisciplina :: [String]
+labelDisciplina = ["Codigo","Cod. Curso","Nome","Periodo"]
+
+labelNota :: [String]
+labelNota = ["Matricula Aluno", "Codigo Disciplina", "Nota 1", "Nota 2"]
 
 le_arquivo :: String -> IO String
 le_arquivo arquivo = catch testa_arquivo trataErro
@@ -125,7 +136,7 @@ lerNotas = do
 verificaMatricula :: IO String
 verificaMatricula = do
                 alunos <- conteudoConvertido "aluno.txt"
-                imprimeAluno(alunos)
+                imprimeDado(alunos, labelAluno)
                 putStr "\nDigite a Matricula do Aluno >> "
                 matricula <- getLine
                 case verificaCondicao (length ([mat:nome:curso:periodo:[] | mat:nome:curso:periodo:[] <- alunos, mat == matricula]) > 0) of
@@ -137,7 +148,7 @@ verificaMatricula = do
 verificaDisciplina :: IO String
 verificaDisciplina  = do
                 disciplinas <- conteudoConvertido "disciplinas.txt"
-                imprimeDisciplina(disciplinas)
+                imprimeDado(disciplinas, labelDisciplina)
                 putStr "\nDigite o codigo da Disciplina >> "
                 cod_disciplina <- getLine
                 case verificaCondicao (length ([disciplina:curso:nome:periodo:[] | disciplina:curso:nome:periodo:[] <- disciplinas, disciplina == cod_disciplina]) > 0) of
@@ -182,7 +193,7 @@ validaMatricula alunos = do
 
 validaCurso :: [[String]] -> IO String
 validaCurso cursos = do
-                imprimeCurso(cursos)
+                imprimeDado(cursos, ["Codigo", "Nome", "Qtd. Periodos"])
                 putStr "Digite o codigo do Curso >> "
                 codigo <- getLine
                 case verificaCondicao (length(buscaCurso cursos codigo)>0) of
@@ -220,34 +231,20 @@ verificaCondicao(operacao)
 
 --Funções de Impressão
 
-imprimeCurso :: [[String]] -> IO ()
-imprimeCurso([[]]) = putStr "\n"
-imprimeCurso((c:n:q:[]):r) = do
-                                putStr "Codigo: " >> putStr(c)
-                                putStr "   |   Nome: " >> putStr(n)
-                                putStr "   |   Qtd. Periodos: " >> putStr(show q)
-                                putStr "\n"
-                                imprimeCurso(r)
 
-imprimeAluno :: [[String]] -> IO()
-imprimeAluno([[]]) = putStr "\n"
-imprimeAluno((m:n:c:p:[]):r) = do
-                                putStr "Matricula: " >> putStr(m)
-                                putStr "   |   Nome: " >> putStr(n)
-                                putStr "   |   Curso: " >> putStr(c)
-                                putStr "   |   Periodo: " >> putStr(show p)
-                                putStr "\n"
-                                imprimeAluno(r)
+imprimeElemento :: ([String], [String]) -> IO ()
+imprimeElemento([],[]) = putStr "\n"
+imprimeElemento(ec:er, lc:lr) = do
+                                putStr(lc ++ ": " ++ ec ++ " | ")
+                                imprimeElemento(er, lr)  
 
-imprimeDisciplina :: [[String]] -> IO()
-imprimeDisciplina([[]]) = putStr "\n"
-imprimeDisciplina((cd:cc:n:p:[]):r) = do
-                                putStr "Codigo da Disciplina: " >> putStr(cd)
-                                putStr "   |   Codigo do curso: " >> putStr(cc)
-                                putStr "   |   Nome: " >> putStr(n)
-                                putStr "   |   Periodo: " >> putStr(show p)
-                                putStr "\n"
-                                imprimeDisciplina(r)
+imprimeDado :: ([[String]], [String]) -> IO ()
+imprimeDado([],labels) = putStr "\n"
+imprimeDado([[]],labels) = putStr "\n"
+imprimeDado(elemento:r, labels) = do
+                                imprimeElemento(elemento, labels)
+                                imprimeDado(r, labels)
+
 --Fim de funções de Impressão
 
 
@@ -388,7 +385,7 @@ aplicacao = do
                                                 aplicacao
                         Just 5 -> do
                                 cursos <- conteudoConvertido "curso.txt"
-                                imprimeCurso(cursos)
+                                imprimeDado(cursos, labelCurso)
                                 aplicacao
                                
                         Just 6 -> do
@@ -401,6 +398,6 @@ aplicacao = do
                                 alunos <- conteudoConvertido "aluno.txt"
                                 notas <- conteudoConvertido "notas.txt"
                                 aluno <- verificaMatricula
-                                print([mat:codigo_disciplina:nota1:nota2:[] | mat:codigo_disciplina:nota1:nota2:[] <- notas, aluno==mat])
+                                imprimeDado([mat:codigo_disciplina:nota1:nota2:[] | mat:codigo_disciplina:nota1:nota2:[] <- notas, aluno==mat], labelNota)
                                 aplicacao
                         Just 9 -> print("Fim do programa.")
