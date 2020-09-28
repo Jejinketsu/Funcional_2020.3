@@ -1,18 +1,12 @@
 disc01
 sinf01
-sistemas
+Topicos em computacao
 2
 #
 
-teste
+disc02
 sinf01
-teste
-1
-#
-
-23
-007
-Pulando de um Aviao sem Paraquedas
+Programacao Funcional
 7
 #
 

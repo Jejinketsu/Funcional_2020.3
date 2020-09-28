@@ -3,13 +3,13 @@ Sistemas
 8
 #
 
-007
-Duro de Morrer
-8
+sinf02
+Biologia
+9
 #
 
-005
-Gambiarra
-4
+sinf03
+Matematica
+8
 #
 

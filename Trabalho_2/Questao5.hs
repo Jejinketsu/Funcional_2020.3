@@ -34,7 +34,6 @@ le_arquivo arquivo = catch testa_arquivo trataErro
                                     else ioError erro
 
 
-
 converteconteudo :: String -> IO [[String]]
 converteconteudo [] = return [[]]
 converteconteudo conteudo = return (map (explodir '\n') ( explodir '#' conteudo))
@@ -194,7 +193,7 @@ validaMatricula alunos = do
 validaCurso :: [[String]] -> IO String
 validaCurso cursos = do
                 imprimeDado(cursos, ["Codigo", "Nome", "Qtd. Periodos"])
-                putStr "Digite o codigo do Curso >> "
+                putStr "\nDigite o codigo do Curso >> "
                 codigo <- getLine
                 case verificaCondicao (length(buscaCurso cursos codigo)>0) of
                         Just True -> return codigo
@@ -308,14 +307,14 @@ aplicacaoVerAluno = do
                         cursos <- conteudoConvertido "curso.txt"
                         alunos <- conteudoConvertido "aluno.txt"
                         codigo <- validaCurso cursos
-                        print([mat:nome_aluno:curso:periodo:[] | mat:nome_aluno:curso:periodo:[] <- alunos, cod_curso:nome_curso:qtd_periodo:[] <- cursos, curso == cod_curso, codigo == cod_curso])
+                        imprimeDado([mat:nome_aluno:curso:periodo:[] | mat:nome_aluno:curso:periodo:[] <- alunos, cod_curso:nome_curso:qtd_periodo:[] <- cursos, curso == cod_curso, codigo == cod_curso], labelAluno)
                         aplicacaoVerAluno
                 Just 2 -> do
                         cursos <- conteudoConvertido "curso.txt"
                         alunos <- conteudoConvertido "aluno.txt"
                         codigo <- validaCurso cursos
                         periodo <- validaPeriodo(cursos, codigo)
-                        print([mat:nome_aluno:curso:periodo_aluno:[] | mat:nome_aluno:curso:periodo_aluno:[] <- alunos, cod_curso:nome_curso:qtd_periodo:[] <- cursos, curso == cod_curso, codigo == cod_curso, (read periodo_aluno :: Int )== periodo])
+                        imprimeDado([mat:nome_aluno:curso:periodo_aluno:[] | mat:nome_aluno:curso:periodo_aluno:[] <- alunos, cod_curso:nome_curso:qtd_periodo:[] <- cursos, curso == cod_curso, codigo == cod_curso, (read periodo_aluno :: Int )== periodo], labelAluno)
                         aplicacaoVerAluno
                 Just 3 -> print("Voltando...")
 
@@ -331,14 +330,14 @@ aplicacaoVerDisciplina = do
                         cursos <- conteudoConvertido "curso.txt"
                         disciplinas <- conteudoConvertido "disciplinas.txt"
                         codigo <- validaCurso cursos
-                        print([cod_disc:cod_disc_curso:nome:periodo:[] | cod_disc:cod_disc_curso:nome:periodo:[] <- disciplinas, cod_curso:nome_curso:qtd_periodo:[] <- cursos, cod_disc_curso == cod_curso, codigo == cod_curso])
+                        imprimeDado([cod_disc:cod_disc_curso:nome:periodo:[] | cod_disc:cod_disc_curso:nome:periodo:[] <- disciplinas, cod_curso:nome_curso:qtd_periodo:[] <- cursos, cod_disc_curso == cod_curso, codigo == cod_curso], labelDisciplina)
                         aplicacaoVerDisciplina
                 Just 2 -> do
                         cursos <- conteudoConvertido "curso.txt"
                         disciplinas <- conteudoConvertido "disciplinas.txt"
                         codigo <- validaCurso cursos
                         periodo_lido <- validaPeriodo(cursos, codigo)
-                        print([cod_disc:cod_disc_curso:nome:periodo:[] | cod_disc:cod_disc_curso:nome:periodo:[] <- disciplinas, cod_curso:nome_curso:qtd_periodo:[] <- cursos, cod_disc_curso == cod_curso, codigo == cod_curso, (read periodo :: Int) == periodo_lido])
+                        imprimeDado([cod_disc:cod_disc_curso:nome:periodo:[] | cod_disc:cod_disc_curso:nome:periodo:[] <- disciplinas, cod_curso:nome_curso:qtd_periodo:[] <- cursos, cod_disc_curso == cod_curso, codigo == cod_curso, (read periodo :: Int) == periodo_lido], labelDisciplina)
                         aplicacaoVerDisciplina
                 Just 3 -> print("Voltando...")
 
