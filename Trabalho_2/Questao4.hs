@@ -29,7 +29,6 @@ lerNotas :: [Aluno] -> [Disciplina] -> IO Nota
 lerNotas listaAlunos listaDisciplina = do
         putStr "Digite a matricula do aluno >> "
         matricula_aluno <- verificaMatricula listaAlunos
-        putStr "Digite o codigo da disciplina >> "
         codigo_disciplina <- verificaDisciplina listaDisciplina
         putStr "Digite a nota 1 >> "
         nota_1 <- getLine
@@ -49,9 +48,7 @@ lerAluno listaCurso listaAlunos = do
         matricula <- validaMatricula listaAlunos
         putStr "Digite o nome do aluno >> "
         nome_aluno <- getLine
-        putStr "Digite o codigo do curso >> "
         codigo_curso <- validaCurso listaCurso
-        putStr "Digite o periodo do aluno >> "
         periodo <- validaPeriodo listaCurso codigo_curso
         return (matricula, nome_aluno, codigo_curso, periodo)
  
@@ -63,7 +60,6 @@ lerDisciplina listaDisciplina listaCurso = do
         codigo_curso <- validaCurso listaCurso
         putStr "Digite o nome da disciplina >> "
         nome_disciplina <- getLine
-        putStr "Digite o periodo da disciplina >> "
         periodo <- validaPeriodo listaCurso codigo_curso
         return (codigo_disciplina, codigo_curso, nome_disciplina, periodo)
 
@@ -77,7 +73,7 @@ validaMatricula listaAlunos = do
                                         validaMatricula listaAlunos
                         Just False -> return matricula
 
-validaDisciplina :: [Aluno] -> IO String
+validaDisciplina :: [Disciplina] -> IO String
 validaDisciplina listaDisciplina = do
                 cod_disciplina <- getLine
                 case verificaCondicao (length ([disciplina | (disciplina, curso, nome, periodo) <- listaDisciplina, disciplina == cod_disciplina]) > 0) of
@@ -99,6 +95,7 @@ validaCurso listaCurso = do
 
 validaPeriodo :: [Curso] -> String -> IO Int
 validaPeriodo listaCurso cod_curso = do
+        putStr "Digite o periodo >> "
         periodo <- getLine
         case verificaCondicao (length ([codigo | (codigo, nome, qtd_periodo) <- listaCurso, codigo == cod_curso, (read periodo :: Int) <= qtd_periodo, (read periodo :: Int) > 0]) > 0) of
                 Just True -> return (read periodo :: Int)
